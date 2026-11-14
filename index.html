@@ -269,7 +269,7 @@ window.setReportStatus=(id,status,note='')=>{localStatusUpdate(id,status,note);c
 setTimeout(()=>{loadRecentFromGAS();flushSubmissionQueue()},1000);
 
 // Firebase / GitHub Pages production transport.
-const firebaseConfig={apiKey:'AIzaSyAMEsa-uAt7Z71j-6eKBbHHDyjr1K8gSyE',authDomain:'checkerpn-15ccd.firebaseapp.com',projectId:'checkerpn-15ccd',storageBucket:'checkerpn-15ccd.firebasestorage.app',messagingSenderId:'866303195620',appId:'1:866303195620:web:d96edb152924389815aff1'};
+const firebaseConfig={apiKey:'AIzaSyAMEsa-uAt7Z71j-6eKBbHHDyjrlK8gSyE',authDomain:'checkerpn-15ccd.firebaseapp.com',projectId:'checkerpn-15ccd',storageBucket:'checkerpn-15ccd.firebasestorage.app',messagingSenderId:'866303195620',appId:'1:866303195620:web:d96edb152924389815aff1'};
 const firstAdminEmail='thanakit.ritsri@gmail.com';
 let firebaseAuth=null,firestoreDb=null,firebaseReady=false;
 function reportDocumentId(r){return encodeURIComponent(`${schoolSettings.academicYear}-${schoolSettings.term}_${r.date}_${r.room}_${r.period}`).replace(/%/g,'_')}
