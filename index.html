@@ -115,11 +115,14 @@ body{font-size:15px;line-height:1.55}.topbar{background:#fff;border-right:1px so
   <script>const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const todayBangkok=()=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const defaultRooms=Array.from({length:6},(_,g)=>Array.from({length:6},(_,r)=>`ม.${g+1}/${r+1}`)).flat();
-const rooms=JSON.parse(localStorage.getItem('cr_rooms')||'null')||defaultRooms;
+// Production uses Firestore as the source of truth. Legacy mock/local master data
+// is deliberately ignored so every browser and phone sees the same records.
+const productionCloudMode=true;
+const rooms=productionCloudMode?[]:(JSON.parse(localStorage.getItem('cr_rooms')||'null')||defaultRooms);
 const names=['กชกร วัฒนสุข','กิตติพงศ์ ศรีดี','ขวัญฤดี มั่นคง','จิรายุ ทองแท้','ชลธิชา บุญมี','ณัฐชนน พรมมา','ดวงกมล แสงแก้ว','ธนกร ใจกล้า','นภัสสร พูนผล','ปกรณ์ เกษมสุข','พรนภา วงศ์ดี','ภัทรพล แก้วใส'];
-let students=JSON.parse(localStorage.getItem('cr_students')||'null')||Object.fromEntries(rooms.map((r,ri)=>[r,names.map((n,i)=>({id:`${ri+1}${String(i+1).padStart(2,'0')}`,name:n}))]));
+let students=productionCloudMode?{}:(JSON.parse(localStorage.getItem('cr_students')||'null')||Object.fromEntries(rooms.map((r,ri)=>[r,names.map((n,i)=>({id:`${ri+1}${String(i+1).padStart(2,'0')}`,name:n}))])));
 const seed=[{id:1,date:'2026-11-14',time:'09:42',room:'ม.2/1',period:'คาบที่ 2',subject:'คณิตศาสตร์',teacher:'ครูศิริพร แก้วมณี',counts:{มา:10,ขาด:1,ลา:1,สาย:0},photo:'',signature:''},{id:2,date:'2026-11-14',time:'09:18',room:'ม.1/1',period:'คาบที่ 2',subject:'ภาษาไทย',teacher:'ครูวราภรณ์ ดวงดี',counts:{มา:11,ขาด:0,ลา:0,สาย:1},photo:'',signature:''},{id:3,date:'2026-11-14',time:'08:47',room:'ม.3/1',period:'คาบที่ 1',subject:'วิทยาศาสตร์',teacher:'ครูธนวัฒน์ มีสุข',counts:{มา:10,ขาด:2,ลา:0,สาย:0},photo:'',signature:''}];
-let reports=JSON.parse(localStorage.getItem('cr_reports')||'null')||seed;let attendance={},attendanceNotes={};let photos=[];let currentUser=null;
+let reports=productionCloudMode?[]:(JSON.parse(localStorage.getItem('cr_reports')||'null')||seed);let attendance={},attendanceNotes={};let photos=[];let currentUser=null;
 let schoolSettings=JSON.parse(localStorage.getItem('cr_settings')||'null')||{schoolName:'Classroom Flow',logoUrl:'',term:'2',academicYear:'2569',footerTitle:'ระบบบันทึกการเรียนการสอน',footerDetail:'ฝ่ายวิชาการ · โรงเรียนตัวอย่างวิทยา',footerNote:'พัฒนาขึ้นเพื่อสนับสนุนการจัดการเรียนรู้และลดภาระงานเอกสาร'};
 let periods=JSON.parse(localStorage.getItem('cr_periods')||'null')||[{name:'คาบที่ 1',start:'08:30',end:'09:20'},{name:'คาบที่ 2',start:'09:20',end:'10:10'},{name:'คาบที่ 3',start:'10:20',end:'11:10'},{name:'คาบที่ 4',start:'11:10',end:'12:00'},{name:'คาบที่ 5',start:'13:00',end:'13:50'},{name:'คาบที่ 6',start:'13:50',end:'14:40'}];
 reports.forEach(r=>{r.counts=r.counts||{};r.counts.มา??=0;r.counts.ขาด??=0;r.counts.ลาป่วย??=r.counts.ลา||0;r.counts.ลากิจ??=0;r.counts.สาย??=0;delete r.counts.ลา;r.subjectGroup??='';r.attendance??={};r.notes??={}});
